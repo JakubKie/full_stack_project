@@ -18,7 +18,7 @@ export default function Cart() {
             <h1 className="text-2xl font-bold mb-6">Koszyk</h1>
 
             {items.length === 0 ? (
-                <p>Koszyk jest pusty 🛒</p>
+                <p>Koszyk jest pusty</p>
             ) : (
                 <>
                     <Table>

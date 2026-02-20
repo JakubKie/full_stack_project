@@ -7,9 +7,11 @@ export const checkoutSchema = z.object({
         .string()
         .min(8, "Min 8 znaków")
         .regex(/[A-Z]/, "Musi zawierać wielką literę"),
-    city: z.string().min(2),
+
+    city: z.string().min(2, "Podaj miasto"),
     postalCode: z.string().regex(/^\d{2}-\d{3}$/, "Format: 00-000"),
-    street: z.string().min(3),
+    street: z.string().min(3, "Podaj ulicę"),
+
     paymentType: z.enum(["card", "blik", "paypal"]),
     terms: z.boolean().refine(val => val === true, {
         message: "Musisz zaakceptować regulamin",

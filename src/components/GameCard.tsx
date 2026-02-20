@@ -23,7 +23,7 @@ export default function GameCard({ game, onAdd }: Props) {
 
             <CardFooter className="flex justify-between">
                 <Badge>{game.platform}</Badge>
-                <Button onClick={() => {onAdd(game.id); console.log("test0")}}>
+                <Button onClick={() => onAdd(game.id)}>
                     Dodaj
                 </Button>
             </CardFooter>

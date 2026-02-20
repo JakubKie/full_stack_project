@@ -13,6 +13,7 @@ type CartContextType = {
     increase: (id: string) => void;
     decrease: (id: string) => void;
     totalPrice: number;
+    clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -39,9 +40,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
         });
 
         if (wasExisting) {
-            toast.info("Zwiększono ilość w koszyku");
+            toast.info("Zwiększono ilość w koszyku", {action: {
+                    label: "Cofnij",
+                    onClick: () => decrease(game.id),
+                }});
         } else {
-            toast.success(`${game.title} dodano do koszyka`);
+            toast.success(`${game.title} dodano do koszyka`, {action: {
+                label: "Cofnij",
+                    onClick: () => decrease(game.id),
+            }});
         }
     };
 
@@ -77,6 +84,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         0
     );
 
+    const clearCart = () => setItems([]);
+
     return (
         <CartContext.Provider
             value={{
@@ -85,6 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 removeFromCart,
                 increase,
                 decrease,
+                clearCart,
                 totalPrice,
             }}
         >
