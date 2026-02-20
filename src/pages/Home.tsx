@@ -1,5 +1,6 @@
 import GameCard from "@/components/GameCard";
 import type {Game} from "@/types/game";
+import { useCart } from "@/context/CartContext";
 
 const mockGames: Game[] = [
     {
@@ -21,6 +22,7 @@ const mockGames: Game[] = [
 ];
 
 export default function Home() {
+    const { addToCart } = useCart();
     return (
         <div className="container mx-auto px-4 py-8">
 
@@ -29,7 +31,7 @@ export default function Home() {
                     <GameCard
                         key={game.id}
                         game={game}
-                        onAdd={(id) => console.log("ADD", id)}
+                        onAdd={() => addToCart(game)}
                     />
                 ))}
             </div>
