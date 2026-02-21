@@ -62,7 +62,7 @@ export default function App() {
                 <main className="flex-1">
                     {page === "home" && <Home />}
                     {page === "cart" && <Cart setPage={setPage} />}
-                    {page === "checkout" && <Checkout />}
+                    {page === "checkout" && <Checkout setPage={setPage}/>}
                 </main>
 
                 <Toaster richColors theme="dark" />

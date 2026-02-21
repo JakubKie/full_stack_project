@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema, type CheckoutData } from "@/lib/validators";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
-
 import {
     Form,
     FormControl,
@@ -13,7 +12,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,10 +21,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
 import { Checkbox } from "@/components/ui/checkbox";
 
-export default function Checkout() {
+type Props = {
+    setPage: (page: "home" | "cart" | "checkout") => void;
+};
+
+export default function Checkout({ setPage }: Props) {
     const [step, setStep] = useState(1);
     const { totalPrice, clearCart, items } = useCart();
 
@@ -59,6 +60,7 @@ export default function Checkout() {
         console.log("ORDER:", data);
         toast.success("Zamówienie złożone pomyślnie!");
         clearCart();
+        setPage("home")
     };
 
     return (
@@ -246,6 +248,7 @@ export default function Checkout() {
                                                             onCheckedChange={checked =>
                                                                 field.onChange(!!checked)
                                                             }
+                                                            className="h-2"
                                                         />
                                                     </FormControl>
                                                     <FormLabel className="!mt-0">
@@ -301,12 +304,12 @@ export default function Checkout() {
                                     key={item.id}
                                     className="flex justify-between text-sm"
                                 >
-                  <span>
-                    {item.title} × {item.quantity}
-                  </span>
                                     <span>
-                    {item.price * item.quantity} zł
-                  </span>
+                                        {item.title} × {item.quantity}
+                                    </span>
+                                    <span>
+                                        {item.price * item.quantity} zł
+                                    </span>
                                 </div>
                             ))}
                         </div>

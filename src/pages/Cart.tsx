@@ -130,8 +130,8 @@ export default function Cart({ setPage }: Props) {
                         <div className="flex justify-between mb-2">
                             <span>Liczba produktów:</span>
                             <span>
-                {items.reduce((s, i) => s + i.quantity, 0)}
-              </span>
+                                {items.reduce((s, i) => s + i.quantity, 0)}
+                            </span>
                         </div>
 
                         <div className="flex justify-between text-lg font-bold mb-6">
