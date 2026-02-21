@@ -1,11 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { games } from "@/data/games";
 import { useCart } from "@/context/CartContext";
 import GameCard from "@/components/GameCard";
 import { Button } from "@/components/ui/button";
+import { ArrowDown } from "lucide-react";
+
 
 export default function Home() {
     const { addToCart } = useCart();
+
 
     const [platformFilter, setPlatformFilter] = useState<
         "ALL" | "PC" | "PS5" | "Xbox"
@@ -30,6 +33,23 @@ export default function Home() {
 
         return result;
     }, [platformFilter, sort]);
+
+    const [showArrow, setShowArrow] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrolledToBottom =
+                window.innerHeight + window.scrollY >=
+                document.body.offsetHeight - 5;
+
+            setShowArrow(!scrolledToBottom);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll(); // check on mount
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -74,7 +94,6 @@ export default function Home() {
                         Cena ↓
                     </Button>
                 </div>
-
             </section>
 
             <section className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -86,7 +105,11 @@ export default function Home() {
                     />
                 ))}
             </section>
-
+            {showArrow && (
+                <div className="bg-white border-3 border-solid border-gray-500 rounded-full flex justify-center items-center fixed bottom-6 left-1/2 -translate-x-1/2 size-9 animate-bounce text-muted-foreground opacity-70">
+                    <ArrowDown color="#111"/>
+                </div>
+        )}
         </div>
     );
 }
