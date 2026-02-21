@@ -28,13 +28,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Checkout() {
     const [step, setStep] = useState(1);
-    const { totalPrice, clearCart } = useCart();
+    const { totalPrice, clearCart, items } = useCart();
 
     const form = useForm<CheckoutData>({
         resolver: zodResolver(checkoutSchema),
         defaultValues: {
             email: "",
-            nickname: "",
+            login: "",
             password: "",
             city: "",
             postalCode: "",
@@ -48,7 +48,7 @@ export default function Checkout() {
     const nextStep = async () => {
         let fields: (keyof CheckoutData)[] = [];
 
-        if (step === 1) fields = ["email", "nickname", "password"];
+        if (step === 1) fields = ["email", "login", "password"];
         if (step === 2) fields = ["city", "postalCode", "street"];
 
         const isValid = await form.trigger(fields);
@@ -62,183 +62,263 @@ export default function Checkout() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-md">
-            <h1 className="text-2xl font-bold mb-6">
-                Checkout – Suma: {totalPrice} zł
+        <div className="container mx-auto px-4 py-12">
+
+            <h1 className="text-3xl font-bold mb-10">
+                Checkout
             </h1>
 
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* GRID LAYOUT */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-                    {/* STEP 1 */}
-                    {step === 1 && (
-                        <>
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                {/* LEFT – FORM */}
+                <div className="lg:col-span-2">
+
+                    {/* STEP INDICATOR */}
+                    <div className="flex items-center gap-4 mb-8">
+                        {[1, 2, 3].map(s => (
+                            <div
+                                key={s}
+                                className={`flex-1 h-2 rounded-full transition ${
+                                    step >= s
+                                        ? "bg-primary"
+                                        : "bg-muted"
+                                }`}
                             />
-
-                            <FormField
-                                control={form.control}
-                                name="nickname"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Nick</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Hasło</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </>
-                    )}
-
-                    {/* STEP 2 */}
-                    {step === 2 && (
-                        <>
-                            <FormField
-                                control={form.control}
-                                name="city"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Miasto</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="postalCode"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Kod pocztowy</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="street"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Ulica</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </>
-                    )}
-
-                    {/* STEP 3 */}
-                    {step === 3 && (
-                        <>
-                            <FormField
-                                control={form.control}
-                                name="paymentType"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Typ płatności</FormLabel>
-                                        <Select
-                                            value={field.value}
-                                            onValueChange={field.onChange}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Wybierz typ płatności" />
-                                                </SelectTrigger>
-                                            </FormControl>
-
-                                            <SelectContent>
-                                                <SelectItem value="card">Karta</SelectItem>
-                                                <SelectItem value="blik">BLIK</SelectItem>
-                                                <SelectItem value="paypal">PayPal</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="terms"
-                                render={({ field }) => (
-                                    <FormItem className="flex items-center space-x-2">
-                                        <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={(checked) =>
-                                                    field.onChange(!!checked)
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormLabel className="!mt-0">
-                                            Akceptuję regulamin
-                                        </FormLabel>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </>
-                    )}
-
-                    {/* NAVIGATION */}
-                    <div className="flex justify-between pt-4">
-                        {step > 1 && (
-                            <Button type="button" variant="outline" onClick={() => setStep(step - 1)}>
-                                Back
-                            </Button>
-                        )}
-
-                        {step < 3 && (
-                            <Button type="button" onClick={nextStep}>
-                                Next
-                            </Button>
-                        )}
-
-                        {step === 3 && (
-                            <Button type="submit">
-                                Złóż zamówienie
-                            </Button>
-                        )}
+                        ))}
                     </div>
-                </form>
-            </Form>
+
+                    <div className="bg-card border rounded-xl p-6 shadow-sm">
+
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-6"
+                            >
+
+                                {/* STEP 1 */}
+                                {step === 1 && (
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl font-semibold">
+                                            Dane konta
+                                        </h2>
+
+                                        {/* EMAIL */}
+                                        <FormField
+                                            control={form.control}
+                                            name="email"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Email</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* LOGIN */}
+                                        <FormField
+                                            control={form.control}
+                                            name="login"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Login</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* PASSWORD */}
+                                        <FormField
+                                            control={form.control}
+                                            name="password"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Hasło</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="password" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* STEP 2 */}
+                                {step === 2 && (
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl font-semibold">
+                                            Adres dostawy
+                                        </h2>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="city"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Miasto</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="postalCode"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Kod pocztowy</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="street"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Ulica</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* STEP 3 */}
+                                {step === 3 && (
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl font-semibold">
+                                            Płatność
+                                        </h2>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="paymentType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Typ płatności</FormLabel>
+                                                    <Select
+                                                        value={field.value}
+                                                        onValueChange={field.onChange}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Wybierz płatność" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+
+                                                        <SelectContent>
+                                                            <SelectItem value="card">Karta</SelectItem>
+                                                            <SelectItem value="blik">BLIK</SelectItem>
+                                                            <SelectItem value="paypal">PayPal</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="terms"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-3">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={checked =>
+                                                                field.onChange(!!checked)
+                                                            }
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="!mt-0">
+                                                        Akceptuję regulamin
+                                                    </FormLabel>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* NAVIGATION */}
+                                <div className="flex justify-between pt-6 border-t">
+                                    {step > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setStep(step - 1)}
+                                        >
+                                            Wstecz
+                                        </Button>
+                                    )}
+
+                                    {step < 3 && (
+                                        <Button type="button" onClick={nextStep}>
+                                            Dalej
+                                        </Button>
+                                    )}
+
+                                    {step === 3 && (
+                                        <Button type="submit">
+                                            Złóż zamówienie
+                                        </Button>
+                                    )}
+                                </div>
+
+                            </form>
+                        </Form>
+                    </div>
+                </div>
+
+                {/* RIGHT – SUMMARY */}
+                <div>
+                    <div className="bg-card border rounded-xl p-6 shadow-sm sticky top-24">
+                        <h3 className="text-xl font-semibold mb-4">
+                            Podsumowanie
+                        </h3>
+
+                        <div className="space-y-2 mb-4">
+                            {items.map(item => (
+                                <div
+                                    key={item.id}
+                                    className="flex justify-between text-sm"
+                                >
+                  <span>
+                    {item.title} × {item.quantity}
+                  </span>
+                                    <span>
+                    {item.price * item.quantity} zł
+                  </span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="border-t pt-4 flex justify-between font-bold text-lg">
+                            <span>Łącznie:</span>
+                            <span>{totalPrice} zł</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     );
 }
