@@ -1,4 +1,4 @@
-import { useCart } from "@/context/CartContext";
+import {useCart} from "@/context/CartContext";
 import {
     Table,
     TableBody,
@@ -7,10 +7,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 
-export default function Cart() {
-    const { items, increase, decrease, removeFromCart, totalPrice } = useCart();
+interface CartProps {
+    setPage: (page: "home" | "cart" | "checkout") => void
+}
+
+export default function Cart({setPage}: CartProps) {
+    const {items, increase, decrease, removeFromCart, totalPrice} = useCart();
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -81,7 +85,9 @@ export default function Cart() {
                             Suma: {totalPrice} zł
                         </h2>
 
-                        <Button>
+                        <Button onClick={() => {
+                            setPage("checkout")
+                        }}>
                             Przejdź do checkout
                         </Button>
                     </div>

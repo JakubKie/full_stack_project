@@ -18,7 +18,7 @@ export default function App() {
                 </div>
 
                 {page === "home" && <Home />}
-                {page === "cart" && <Cart />}
+                {page === "cart" && <Cart setPage={setPage}/>}
                 {page === "checkout" && <Checkout />}
 
                 <Toaster richColors theme={"dark"}/>
