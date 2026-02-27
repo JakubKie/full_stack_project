@@ -57,7 +57,6 @@ export default function Checkout({ setPage }: Props) {
     };
 
     const onSubmit = (data: CheckoutData) => {
-        console.log("ORDER:", data);
         toast.success("Zamówienie złożone pomyślnie!");
         clearCart();
         setPage("home")
