@@ -46,7 +46,7 @@ export const games: Game[] = [
         title: "Halo Infinite",
         price: 129,
         platform: "Xbox",
-        image: "https://i1.wp.com/seasonedgaming.com/wp-content/uploads/2020/07/Infinite-Cover-WP.jpg",
+        image: "https://static.wikia.nocookie.net/halo/images/e/e3/Halo_Infinite_Official_Release_Poster.png",
         description: "Kosmiczny shooter",
     },
     {
